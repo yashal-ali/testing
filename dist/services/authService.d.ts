@@ -10,11 +10,18 @@
 export declare const registerUser: (firstName: string, lastName: string, userName: string, email: string, password: string) => Promise<{
     success: boolean;
     message: string;
+    verifyCode?: undefined;
+    error?: undefined;
+} | {
+    success: boolean;
+    message: string;
+    verifyCode: string;
     error?: undefined;
 } | {
     success: boolean;
     message: string;
     error: any;
+    verifyCode?: undefined;
 }>;
 export declare const verifyUser: (userName: string, code: string) => Promise<{
     success: boolean;

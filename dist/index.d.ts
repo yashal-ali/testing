@@ -4,11 +4,18 @@ declare const _default: {
     registerUser: (firstName: string, lastName: string, userName: string, email: string, password: string) => Promise<{
         success: boolean;
         message: string;
+        verifyCode?: undefined;
+        error?: undefined;
+    } | {
+        success: boolean;
+        message: string;
+        verifyCode: string;
         error?: undefined;
     } | {
         success: boolean;
         message: string;
         error: any;
+        verifyCode?: undefined;
     }>;
     verifyUser: (userName: string, code: string) => Promise<{
         success: boolean;

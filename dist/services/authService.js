@@ -70,7 +70,7 @@ const registerUser = (firstName, lastName, userName, email, password) => __await
         });
         console.log("🟢 Before Saving to MongoDB:", newUser);
         yield newUser.save();
-        return { success: true, message: "User registered successfully!" };
+        return { success: true, message: "User registered successfully!", verifyCode };
     }
     catch (error) {
         console.error("❌ Error registering user:", error);
