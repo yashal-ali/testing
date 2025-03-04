@@ -64,11 +64,11 @@ export const registerUser = async (
       isVerified: false,
       extraFields: extraFields || {}, // ✅ Store extra fields dynamically
     });
-
+    const userId=newUser._id
     console.log("🟢 Saving User to MongoDB:", newUser);
     await newUser.save();
 
-    return { success: true, message: "User registered successfully!", verifyCode };
+    return { success: true, message: "User registered successfully!", verifyCode ,userId  };
   } catch (error: any) {
     console.error("❌ Error registering user:", error);
     return { success: false, message: "An error occurred.", error: error.message };

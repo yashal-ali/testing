@@ -63,9 +63,10 @@ const registerUser = (firstName, lastName, userName, email, password, extraField
             isVerified: false,
             extraFields: extraFields || {}, // ✅ Store extra fields dynamically
         });
+        const userId = newUser._id;
         console.log("🟢 Saving User to MongoDB:", newUser);
         yield newUser.save();
-        return { success: true, message: "User registered successfully!", verifyCode };
+        return { success: true, message: "User registered successfully!", verifyCode, userId };
     }
     catch (error) {
         console.error("❌ Error registering user:", error);
