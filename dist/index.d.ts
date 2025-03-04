@@ -1,6 +1,5 @@
-import { registerUser, verifyUser, resetPassword, forgotPassword } from "./services/authService";
-import User from "./models/User";
-export { registerUser, verifyUser, resetPassword, forgotPassword, User };
+export { default as User } from "./models/User";
+export { registerUser, verifyUser, resetPassword } from "./services/authService";
 declare const _default: {
     registerUser: (firstName: string, lastName: string, userName: string, email: string, password: string) => Promise<{
         success: boolean;
@@ -52,6 +51,5 @@ declare const _default: {
         error: any;
         resetLink?: undefined;
     }>;
-    User: import("mongoose").Model<any, {}, {}, {}, any, any>;
 };
 export default _default;
