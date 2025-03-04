@@ -16,6 +16,7 @@ exports.verifyToken = exports.loginUser = exports.registerUser = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const User_1 = __importDefault(require("../models/User"));
+const database_1 = require("../config/database");
 const JWT_SECRET = process.env.JWT_SECRET;
 /**
  * Registers a new user
@@ -29,6 +30,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const registerUser = (firstName, lastName, userName, email, password) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("📌 Received Data:", { firstName, lastName, userName, email, password });
+        yield (0, database_1.connectDB)();
         // Ensure required fields are provided
         if (!firstName || !lastName || !userName || !email || !password) {
             console.error("❌ Missing required fields");

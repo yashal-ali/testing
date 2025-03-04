@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
+import { connectDB } from "../config/database";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -22,7 +23,7 @@ export const registerUser = async (
 ) => {
   try {
     console.log("📌 Received Data:", { firstName, lastName, userName, email, password });
-
+    await connectDB();
     // Ensure required fields are provided
     if (!firstName || !lastName || !userName || !email || !password) {
       console.error("❌ Missing required fields");
