@@ -27,10 +27,9 @@ const JWT_SECRET = process.env.JWT_SECRET;
  * @param password - Plain text password
  * @returns Success or failure response
  */
-const registerUser = (firstName, lastName, userName, email, password) => __awaiter(void 0, void 0, void 0, function* () {
+const registerUser = (firstName, lastName, userName, email, password, extraFields) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("📌 Received Data:", { firstName, lastName, userName, email, password });
-        yield (0, database_1.connectDB)();
+        console.log("📌 Received Data:", Object.assign({ firstName, lastName, userName, email, password }, extraFields));
         // Ensure required fields are provided
         if (!firstName || !lastName || !userName || !email || !password) {
             console.error("❌ Missing required fields");
@@ -49,25 +48,20 @@ const registerUser = (firstName, lastName, userName, email, password) => __await
                 };
             }
             else {
-                // Update the existing unverified user
+                // Update existing unverified user
                 existingUserByEmail.password = hashedPassword;
                 existingUserByEmail.verifyCode = verifyCode;
                 existingUserByEmail.verifyCodeExpiry = verifyCodeExpiry;
                 yield existingUserByEmail.save();
-                return { success: true, message: "Verification code resent to email.", verifyCode };
+                return { success: true, message: "Verification code resent to email." };
             }
         }
-        // Create new user
-        const newUser = new User_1.default({
-            firstName,
+        // Create new user with extra fields
+        const newUser = new User_1.default(Object.assign({ firstName,
             lastName,
             userName,
-            email,
-            password: hashedPassword,
-            verifyCode,
-            verifyCodeExpiry,
-            isVerified: false,
-        });
+            email, password: hashedPassword, verifyCode,
+            verifyCodeExpiry, isVerified: false }, extraFields));
         console.log("🟢 Before Saving to MongoDB:", newUser);
         yield newUser.save();
         return { success: true, message: "User registered successfully!", verifyCode };

@@ -1,7 +1,11 @@
 export { default as User } from "./models/User";
 export { registerUser, verifyUser, resetPassword } from "./services/authService";
 declare const _default: {
-    registerUser: (firstName: string, lastName: string, userName: string, email: string, password: string) => Promise<{
+    registerUser: (firstName: string, lastName: string, userName: string, email: string, password: string, extraFields?: {
+        businessCards?: import("mongoose").Types.ObjectId[];
+        contacts?: import("mongoose").Types.ObjectId[];
+        membership?: import("mongoose").Types.ObjectId;
+    }) => Promise<{
         success: boolean;
         message: string;
         verifyCode?: undefined;

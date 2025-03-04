@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { connectDB } from "../config/database";
 import { v4 as uuidv4 } from "uuid";
+import mongoose from "mongoose";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -15,16 +16,18 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
  * @param password - Plain text password
  * @returns Success or failure response
  */
+
 export const registerUser = async (
   firstName: string,
   lastName: string,
   userName: string,
   email: string,
-  password: string
+  password: string,
+  extraFields?: { businessCards?: mongoose.Types.ObjectId[]; contacts?: mongoose.Types.ObjectId[]; membership?: mongoose.Types.ObjectId }
 ) => {
   try {
-    console.log("📌 Received Data:", { firstName, lastName, userName, email, password });
-    await connectDB();
+    console.log("📌 Received Data:", { firstName, lastName, userName, email, password, ...extraFields });
+
     // Ensure required fields are provided
     if (!firstName || !lastName || !userName || !email || !password) {
       console.error("❌ Missing required fields");
@@ -45,16 +48,16 @@ export const registerUser = async (
           message: "Email is already associated with a verified account.",
         };
       } else {
-        // Update the existing unverified user
+        // Update existing unverified user
         existingUserByEmail.password = hashedPassword;
         existingUserByEmail.verifyCode = verifyCode;
         existingUserByEmail.verifyCodeExpiry = verifyCodeExpiry;
         await existingUserByEmail.save();
-        return { success: true, message: "Verification code resent to email.",verifyCode };
+        return { success: true, message: "Verification code resent to email." };
       }
     }
 
-    // Create new user
+    // Create new user with extra fields
     const newUser = new User({
       firstName,
       lastName,
@@ -64,6 +67,7 @@ export const registerUser = async (
       verifyCode,
       verifyCodeExpiry,
       isVerified: false,
+      ...extraFields, // ✅ Add extra fields dynamically
     });
 
     console.log("🟢 Before Saving to MongoDB:", newUser);
