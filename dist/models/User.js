@@ -34,7 +34,6 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-// Define the User schema
 const UserSchema = new mongoose_1.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -42,9 +41,11 @@ const UserSchema = new mongoose_1.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
-    verifyCode: String,
-    verifyCodeExpiry: Date,
+    verifyCode: { type: String },
+    verifyCodeExpiry: { type: Date },
+    // ✅ Dynamic fields
+    extraFields: { type: mongoose_1.Schema.Types.Mixed, default: {} },
 });
-// Ensure the model is created only once
+// Ensure model is not compiled multiple times
 const User = mongoose_1.default.models.User || mongoose_1.default.model("User", UserSchema);
-exports.default = User; // ✅ Export User Model
+exports.default = User;

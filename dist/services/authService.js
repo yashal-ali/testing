@@ -27,42 +27,43 @@ const JWT_SECRET = process.env.JWT_SECRET;
  * @param password - Plain text password
  * @returns Success or failure response
  */
-const registerUser = (firstName, lastName, userName, email, password, extraFields) => __awaiter(void 0, void 0, void 0, function* () {
+const registerUser = (firstName, lastName, userName, email, password, extraFields // ✅ Allow any extra fields
+) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("📌 Received Data:", Object.assign({ firstName, lastName, userName, email, password }, extraFields));
-        // Ensure required fields are provided
+        console.log("📌 Received Data:", { firstName, lastName, userName, email, password, extraFields });
         if (!firstName || !lastName || !userName || !email || !password) {
-            console.error("❌ Missing required fields");
             return { success: false, message: "All fields are required." };
         }
-        // Hash password
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
-        const verifyCodeExpiry = new Date(Date.now() + 3600000); // 1 hour expiry
+        const verifyCodeExpiry = new Date(Date.now() + 3600000);
         const existingUserByEmail = yield User_1.default.findOne({ email });
         if (existingUserByEmail) {
             if (existingUserByEmail.isVerified) {
-                return {
-                    success: false,
-                    message: "Email is already associated with a verified account.",
-                };
+                return { success: false, message: "Email is already associated with a verified account." };
             }
             else {
-                // Update existing unverified user
                 existingUserByEmail.password = hashedPassword;
                 existingUserByEmail.verifyCode = verifyCode;
                 existingUserByEmail.verifyCodeExpiry = verifyCodeExpiry;
+                existingUserByEmail.extraFields = extraFields || {}; // ✅ Store extra fields dynamically
                 yield existingUserByEmail.save();
                 return { success: true, message: "Verification code resent to email." };
             }
         }
-        // Create new user with extra fields
-        const newUser = new User_1.default(Object.assign({ firstName,
+        // ✅ Create new user with dynamic fields
+        const newUser = new User_1.default({
+            firstName,
             lastName,
             userName,
-            email, password: hashedPassword, verifyCode,
-            verifyCodeExpiry, isVerified: false }, extraFields));
-        console.log("🟢 Before Saving to MongoDB:", newUser);
+            email,
+            password: hashedPassword,
+            verifyCode,
+            verifyCodeExpiry,
+            isVerified: false,
+            extraFields: extraFields || {}, // ✅ Store extra fields dynamically
+        });
+        console.log("🟢 Saving User to MongoDB:", newUser);
         yield newUser.save();
         return { success: true, message: "User registered successfully!", verifyCode };
     }

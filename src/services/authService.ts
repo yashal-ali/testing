@@ -17,47 +17,42 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
  * @returns Success or failure response
  */
 
+
 export const registerUser = async (
   firstName: string,
   lastName: string,
   userName: string,
   email: string,
   password: string,
-  extraFields?: { businessCards?: mongoose.Types.ObjectId[]; contacts?: mongoose.Types.ObjectId[]; membership?: mongoose.Types.ObjectId }
+  extraFields?: Record<string, any> // ✅ Allow any extra fields
 ) => {
   try {
-    console.log("📌 Received Data:", { firstName, lastName, userName, email, password, ...extraFields });
+    console.log("📌 Received Data:", { firstName, lastName, userName, email, password, extraFields });
 
-    // Ensure required fields are provided
     if (!firstName || !lastName || !userName || !email || !password) {
-      console.error("❌ Missing required fields");
       return { success: false, message: "All fields are required." };
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
     const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const verifyCodeExpiry = new Date(Date.now() + 3600000); // 1 hour expiry
+    const verifyCodeExpiry = new Date(Date.now() + 3600000);
 
     const existingUserByEmail = await User.findOne({ email });
 
     if (existingUserByEmail) {
       if (existingUserByEmail.isVerified) {
-        return {
-          success: false,
-          message: "Email is already associated with a verified account.",
-        };
+        return { success: false, message: "Email is already associated with a verified account." };
       } else {
-        // Update existing unverified user
         existingUserByEmail.password = hashedPassword;
         existingUserByEmail.verifyCode = verifyCode;
         existingUserByEmail.verifyCodeExpiry = verifyCodeExpiry;
+        existingUserByEmail.extraFields = extraFields || {}; // ✅ Store extra fields dynamically
         await existingUserByEmail.save();
         return { success: true, message: "Verification code resent to email." };
       }
     }
 
-    // Create new user with extra fields
+    // ✅ Create new user with dynamic fields
     const newUser = new User({
       firstName,
       lastName,
@@ -67,10 +62,10 @@ export const registerUser = async (
       verifyCode,
       verifyCodeExpiry,
       isVerified: false,
-      ...extraFields, // ✅ Add extra fields dynamically
+      extraFields: extraFields || {}, // ✅ Store extra fields dynamically
     });
 
-    console.log("🟢 Before Saving to MongoDB:", newUser);
+    console.log("🟢 Saving User to MongoDB:", newUser);
     await newUser.save();
 
     return { success: true, message: "User registered successfully!", verifyCode };
@@ -79,6 +74,7 @@ export const registerUser = async (
     return { success: false, message: "An error occurred.", error: error.message };
   }
 };
+
 
 
 export const verifyUser = async (userName: string, code: string) => {

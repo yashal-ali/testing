@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 /**
  * Registers a new user
  * @param firstName - User's first name
@@ -8,11 +7,7 @@ import mongoose from "mongoose";
  * @param password - Plain text password
  * @returns Success or failure response
  */
-export declare const registerUser: (firstName: string, lastName: string, userName: string, email: string, password: string, extraFields?: {
-    businessCards?: mongoose.Types.ObjectId[];
-    contacts?: mongoose.Types.ObjectId[];
-    membership?: mongoose.Types.ObjectId;
-}) => Promise<{
+export declare const registerUser: (firstName: string, lastName: string, userName: string, email: string, password: string, extraFields?: Record<string, any>) => Promise<{
     success: boolean;
     message: string;
     verifyCode?: undefined;
