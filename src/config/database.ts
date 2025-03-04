@@ -10,7 +10,7 @@ export const connectDB = async () => {
 
   try {
     await mongoose.connect(MONGO_URI, {
-      serverSelectionTimeoutMS: 20000, // Increase timeout
+      serverSelectionTimeoutMS:30000, // Increase timeout
     });
     console.log("✅ MongoDB Connected Successfully (scient-auth).");
   } catch (error) {
