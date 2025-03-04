@@ -1,4 +1,7 @@
-import { connectDB } from "./config/database";
 import { registerUser, loginUser, verifyToken } from "./services/authService";
 
-export { registerUser, loginUser, verifyToken } from "./services/authService";
+// Named exports
+export { registerUser, loginUser, verifyToken };
+
+// Default export (optional)
+export default registerUser;
