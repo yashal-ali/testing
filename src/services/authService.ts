@@ -50,7 +50,7 @@ export const registerUser = async (
         existingUserByEmail.verifyCode = verifyCode;
         existingUserByEmail.verifyCodeExpiry = verifyCodeExpiry;
         await existingUserByEmail.save();
-        return { success: true, message: "Verification code resent to email." };
+        return { success: true, message: "Verification code resent to email.",verifyCode };
       }
     }
 
@@ -69,7 +69,7 @@ export const registerUser = async (
     console.log("🟢 Before Saving to MongoDB:", newUser);
     await newUser.save();
 
-    return { success: true, message: "User registered successfully!",verifyCode };
+    return { success: true, message: "User registered successfully!", verifyCode };
   } catch (error: any) {
     console.error("❌ Error registering user:", error);
     return { success: false, message: "An error occurred.", error: error.message };

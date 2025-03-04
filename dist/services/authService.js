@@ -54,7 +54,7 @@ const registerUser = (firstName, lastName, userName, email, password) => __await
                 existingUserByEmail.verifyCode = verifyCode;
                 existingUserByEmail.verifyCodeExpiry = verifyCodeExpiry;
                 yield existingUserByEmail.save();
-                return { success: true, message: "Verification code resent to email." };
+                return { success: true, message: "Verification code resent to email.", verifyCode };
             }
         }
         // Create new user
