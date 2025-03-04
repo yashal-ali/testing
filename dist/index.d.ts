@@ -1,5 +1,5 @@
 export { default as User } from "./models/User";
-export { registerUser, verifyUser, resetPassword } from "./services/authService";
+export { registerUser, verifyUser, resetPassword, forgotPassword } from "./services/authService";
 declare const _default: {
     registerUser: (firstName: string, lastName: string, userName: string, email: string, password: string, extraFields?: Record<string, any>) => Promise<{
         success: boolean;
