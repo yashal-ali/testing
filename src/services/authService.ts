@@ -61,6 +61,8 @@ export const registerUser = async (
       password: hashedPassword,
       verifyCode,
       verifyCodeExpiry,
+      resetToken: "",
+      resetTokenExpiry: verifyCodeExpiry,
       isVerified: false,
       extraFields: extraFields || {}, // ✅ Store extra fields dynamically
     });

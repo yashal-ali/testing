@@ -60,6 +60,8 @@ const registerUser = (firstName, lastName, userName, email, password, extraField
             password: hashedPassword,
             verifyCode,
             verifyCodeExpiry,
+            resetToken: "",
+            resetTokenExpiry: verifyCodeExpiry,
             isVerified: false,
             extraFields: extraFields || {}, // ✅ Store extra fields dynamically
         });

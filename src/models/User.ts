@@ -8,6 +8,8 @@ interface IUser extends Document {
   password: string;
   isVerified: boolean;
   verifyCode?: string;
+  resetToken:string
+  resetTokenExpiry?: Date;
   verifyCodeExpiry?: Date;
   extraFields?: Record<string, any>; // ✅ Dynamic fields support
 }
@@ -21,6 +23,8 @@ const UserSchema = new Schema<IUser>({
   isVerified: { type: Boolean, default: false },
   verifyCode: { type: String },
   verifyCodeExpiry: { type: Date },
+  resetToken: { type: String, required: true },
+  resetTokenExpiry:{ type: Date },
 
   // ✅ Dynamic fields
   extraFields: { type: Schema.Types.Mixed, default: {} },

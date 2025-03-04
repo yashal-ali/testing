@@ -43,6 +43,8 @@ const UserSchema = new mongoose_1.Schema({
     isVerified: { type: Boolean, default: false },
     verifyCode: { type: String },
     verifyCodeExpiry: { type: Date },
+    resetToken: { type: String, required: true },
+    resetTokenExpiry: { type: Date },
     // ✅ Dynamic fields
     extraFields: { type: mongoose_1.Schema.Types.Mixed, default: {} },
 });
