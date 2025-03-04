@@ -14,6 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectDB = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config(); // Ensure environment variables are loaded
 const MONGO_URI = process.env.MONGODB_URI;
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     if (mongoose_1.default.connection.readyState >= 1) {

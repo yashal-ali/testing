@@ -1,7 +1,7 @@
-import { registerUser, loginUser, verifyToken } from "./services/authService";
+import {  registerUser, verifyUser, resetPassword, forgotPassword } from "./services/authService";
 
 // Named exports
-export { registerUser, loginUser, verifyToken };
+export { registerUser, verifyUser, resetPassword, forgotPassword };
 
 // Default export (optional)
-export default registerUser;
+export default { registerUser, verifyUser, resetPassword, forgotPassword}

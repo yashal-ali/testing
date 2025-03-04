@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyToken = exports.loginUser = exports.registerUser = void 0;
+exports.forgotPassword = exports.resetPassword = exports.verifyUser = exports.registerUser = void 0;
 const authService_1 = require("./services/authService");
 Object.defineProperty(exports, "registerUser", { enumerable: true, get: function () { return authService_1.registerUser; } });
-Object.defineProperty(exports, "loginUser", { enumerable: true, get: function () { return authService_1.loginUser; } });
-Object.defineProperty(exports, "verifyToken", { enumerable: true, get: function () { return authService_1.verifyToken; } });
+Object.defineProperty(exports, "verifyUser", { enumerable: true, get: function () { return authService_1.verifyUser; } });
+Object.defineProperty(exports, "resetPassword", { enumerable: true, get: function () { return authService_1.resetPassword; } });
+Object.defineProperty(exports, "forgotPassword", { enumerable: true, get: function () { return authService_1.forgotPassword; } });
 // Default export (optional)
-exports.default = authService_1.registerUser;
+exports.default = { registerUser: authService_1.registerUser, verifyUser: authService_1.verifyUser, resetPassword: authService_1.resetPassword, forgotPassword: authService_1.forgotPassword };

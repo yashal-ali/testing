@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 /**
  * Registers a new user
  * @param firstName - User's first name
@@ -17,23 +16,37 @@ export declare const registerUser: (firstName: string, lastName: string, userNam
     message: string;
     error: any;
 }>;
-/**
- * Logs in a user
- * @param email - User's email
- * @param password - Plain text password
- * @returns A JWT token and user details
- */
-export declare const loginUser: (email: string, password: string) => Promise<{
-    user: {
-        id: any;
-        name: any;
-        email: any;
-    };
-    token: string;
+export declare const verifyUser: (userName: string, code: string) => Promise<{
+    success: boolean;
+    message: string;
+    error?: undefined;
+} | {
+    success: boolean;
+    message: string;
+    error: any;
 }>;
-/**
- * Verifies a JWT token
- * @param token - JWT token to verify
- * @returns Decoded user data
- */
-export declare const verifyToken: (token: string) => string | jwt.JwtPayload;
+export declare const resetPassword: (token: string, newPassword: string) => Promise<{
+    success: boolean;
+    message: string;
+    error?: undefined;
+} | {
+    success: boolean;
+    message: string;
+    error: any;
+}>;
+export declare const forgotPassword: (email: string) => Promise<{
+    success: boolean;
+    message: string;
+    resetLink?: undefined;
+    error?: undefined;
+} | {
+    success: boolean;
+    message: string;
+    resetLink: string;
+    error?: undefined;
+} | {
+    success: boolean;
+    message: string;
+    error: any;
+    resetLink?: undefined;
+}>;
