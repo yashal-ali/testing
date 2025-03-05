@@ -24,7 +24,7 @@ export const registerUser = async (
   userName: string,
   email: string,
   password: string,
-  extraFields?: Record<string, any> // ✅ Allow any extra fields
+  extraFields?: Record<string, any> // ✅ Accept dynamic fields
 ) => {
   try {
     console.log("📌 Received Data:", { firstName, lastName, userName, email, password, extraFields });
@@ -46,13 +46,18 @@ export const registerUser = async (
         existingUserByEmail.password = hashedPassword;
         existingUserByEmail.verifyCode = verifyCode;
         existingUserByEmail.verifyCodeExpiry = verifyCodeExpiry;
-        existingUserByEmail.extraFields = extraFields || {}; // ✅ Store extra fields dynamically
+
+        // ✅ Spread `extraFields` directly instead of nesting inside `extraFields`
+        if (extraFields) {
+          Object.assign(existingUserByEmail, extraFields);
+        }
+
         await existingUserByEmail.save();
         return { success: true, message: "Verification code resent to email." };
       }
     }
 
-    // ✅ Create new user with dynamic fields
+    // ✅ Create new user & spread `extraFields` correctly
     const newUser = new User({
       firstName,
       lastName,
@@ -64,18 +69,19 @@ export const registerUser = async (
       resetToken: "",
       resetTokenExpiry: verifyCodeExpiry,
       isVerified: false,
-      extraFields: extraFields || {}, // ✅ Store extra fields dynamically
+      ...extraFields, // ✅ Now membership, businessCards, contacts will be direct fields
     });
-    const userId=newUser._id
+
     console.log("🟢 Saving User to MongoDB:", newUser);
     await newUser.save();
 
-    return { success: true, message: "User registered successfully!", verifyCode ,userId  };
+    return { success: true, message: "User registered successfully!", verifyCode, userId: newUser._id };
   } catch (error: any) {
     console.error("❌ Error registering user:", error);
     return { success: false, message: "An error occurred.", error: error.message };
   }
 };
+
 
 
 

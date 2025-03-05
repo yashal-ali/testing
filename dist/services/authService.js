@@ -27,7 +27,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
  * @param password - Plain text password
  * @returns Success or failure response
  */
-const registerUser = (firstName, lastName, userName, email, password, extraFields // ✅ Allow any extra fields
+const registerUser = (firstName, lastName, userName, email, password, extraFields // ✅ Accept dynamic fields
 ) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("📌 Received Data:", { firstName, lastName, userName, email, password, extraFields });
@@ -46,29 +46,23 @@ const registerUser = (firstName, lastName, userName, email, password, extraField
                 existingUserByEmail.password = hashedPassword;
                 existingUserByEmail.verifyCode = verifyCode;
                 existingUserByEmail.verifyCodeExpiry = verifyCodeExpiry;
-                existingUserByEmail.extraFields = extraFields || {}; // ✅ Store extra fields dynamically
+                // ✅ Spread `extraFields` directly instead of nesting inside `extraFields`
+                if (extraFields) {
+                    Object.assign(existingUserByEmail, extraFields);
+                }
                 yield existingUserByEmail.save();
                 return { success: true, message: "Verification code resent to email." };
             }
         }
-        // ✅ Create new user with dynamic fields
-        const newUser = new User_1.default({
-            firstName,
+        // ✅ Create new user & spread `extraFields` correctly
+        const newUser = new User_1.default(Object.assign({ firstName,
             lastName,
             userName,
-            email,
-            password: hashedPassword,
-            verifyCode,
-            verifyCodeExpiry,
-            resetToken: "",
-            resetTokenExpiry: verifyCodeExpiry,
-            isVerified: false,
-            extraFields: extraFields || {}, // ✅ Store extra fields dynamically
-        });
-        const userId = newUser._id;
+            email, password: hashedPassword, verifyCode,
+            verifyCodeExpiry, resetToken: "", resetTokenExpiry: verifyCodeExpiry, isVerified: false }, extraFields));
         console.log("🟢 Saving User to MongoDB:", newUser);
         yield newUser.save();
-        return { success: true, message: "User registered successfully!", verifyCode, userId };
+        return { success: true, message: "User registered successfully!", verifyCode, userId: newUser._id };
     }
     catch (error) {
         console.error("❌ Error registering user:", error);

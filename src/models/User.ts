@@ -8,10 +8,14 @@ interface IUser extends Document {
   password: string;
   isVerified: boolean;
   verifyCode?: string;
-  resetToken:string
-  resetTokenExpiry?: Date;
   verifyCodeExpiry?: Date;
-  extraFields?: Record<string, any>; // ✅ Dynamic fields support
+  resetToken: string;
+  resetTokenExpiry?: Date;
+  
+  membership?: Types.ObjectId;
+  businessCards?: Types.ObjectId[];
+  contacts?: Types.ObjectId[];
+  [key: string]: any; // ✅ Allows dynamic fields
 }
 
 const UserSchema = new Schema<IUser>({
@@ -24,11 +28,15 @@ const UserSchema = new Schema<IUser>({
   verifyCode: { type: String },
   verifyCodeExpiry: { type: Date },
   resetToken: { type: String, required: true },
-  resetTokenExpiry:{ type: Date },
+  resetTokenExpiry: { type: Date },
 
-  // ✅ Dynamic fields
-  extraFields: { type: Schema.Types.Mixed, default: {} },
-});
+  // ✅ Explicitly define top-level fields
+  membership: { type: Schema.Types.ObjectId, ref: "Membership" },
+  businessCards: { type: [Schema.Types.ObjectId], ref: "BusinessCard", default: [] },
+  contacts: { type: [Schema.Types.ObjectId], ref: "Contact", default: [] },
+
+  // ✅ Allows storing additional dynamic fields
+}, { strict: false });
 
 // Ensure model is not compiled multiple times
 const User = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
